@@ -11,5 +11,6 @@ using namespace std;
 int main()
 {
 	printf("hello world!\n");
+    printf("Now I'm using VScode!\n");
 	return 0;
 }
