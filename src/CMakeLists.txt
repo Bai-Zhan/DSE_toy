@@ -3,7 +3,6 @@ SET(CMAKE_C_COMPILER "gcc")
 SET(CMAKE_CXX_COMPILER "g++")
 
 
-
 # directory for header files | 头文件目录
 #INCLUDE_DIRECTORIES(/usr/local/include) # gsl数学运算库的头文件所在目录。 gsl 安装时默认安装在这个位置
 #INCLUDE_DIRECTORIES(${PROJECT_SOURCE_DIR}/include) # 也可以选择将头文件拷贝出来放在项目的文件夹内。这一条语句和上一条语句任选其一即可。
