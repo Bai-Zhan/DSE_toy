@@ -1,9 +1,9 @@
-#指定编译器
+#specify the compiler
 SET(CMAKE_C_COMPILER "gcc")
 SET(CMAKE_CXX_COMPILER "g++")
 
 
-# directory for header files | 头文件目录
+# directory for header files 
 #INCLUDE_DIRECTORIES(/usr/local/include) # gsl数学运算库的头文件所在目录。 gsl 安装时默认安装在这个位置
 #INCLUDE_DIRECTORIES(${PROJECT_SOURCE_DIR}/include) # 也可以选择将头文件拷贝出来放在项目的文件夹内。这一条语句和上一条语句任选其一即可。
 
@@ -15,12 +15,14 @@ ADD_DEFINITIONS(-Wall)
 
 
 #定义源文件列表
-set(APP_SRC main.cpp )
+file(GLOB_RECURSE all_sources "./*.c")
 #set(APP_SRC main.cpp constants.cpp IO.cpp ${SRC_gluon} ${SRC_math} ${SRC_eqn0} ${SRC_eqn_TMu} ${SRC_eqn_T0Mu})
-#set(APP_SRC main.c constants.c ${SRC_IO} ${SRC_math} ${SRC_gluon} ${SRC_eqn_T0Mu} ${SRC_eqn_T0Mu_Cartesian} ${SRC_eqn_T0Mu_polar} ${SRC_eqn_TMu} ${SRC_eqn_T0Mu0} ${SRC_properties} ${SRC_NeutronStar} ${SRC_RMF} ${SRC_Construction} ${SRC_SigmaTerm} ${SRC_condense} ${SRC_NS} ${SRC_Tc} ${SRC_nq} ${SRC_TGL})
 
-add_executable(a ${APP_SRC})
+add_executable(a ${all_sources})
 
 #链接库
 #target_link_libraries(a gomp gsl gslcblas m lapacke lapack ptf77blas atlas)
 #target_link_libraries(a gomp gsl gslcblas m)
+
+target_include_directories(a PRIVATE ${PROJECT_SOURCE_DIR}/src/include) # The path for the .h files written by ourselves.
+

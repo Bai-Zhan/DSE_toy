@@ -4,3 +4,5 @@ In this project, we present some basic code for solving the Dyson-Schwinger equa
 We will use this project to practice the use of GitHub.
 
 This code will also be uploaded to Gitee.
+
+This code has not been compeleted.
