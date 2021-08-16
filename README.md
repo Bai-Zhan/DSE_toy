@@ -14,3 +14,7 @@ This code has not been completed.
 - brew install libomp
 - brew install gsl
 - brew install gcc@8
+
+## For Ubuntu system
+
+- sudo apt install gcc-8
