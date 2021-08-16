@@ -1,9 +1,11 @@
 #include"stdlib.h"
 #include"stdio.h"
+#include"constants.h"
 
 int main()
 {
-	printf("hello world!\n");
-    printf("Now I'm using VScode!\n");
+	extern int VERTEX;
+    printf("%i\n",VERTEX);
+
 	return 0;
 }
