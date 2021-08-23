@@ -58,33 +58,20 @@ double LambdaV=1e3;//ultra-violet cut-off
 //double LambdaV_P4=1e3;
 //
 int ReScheme=_RENORMALIZATION_OFF_;
-// 1 current quark mass independent scheme used by Chen Jing. A(\mu)=1, \frac{dB(p)}{dm_{f}}|_{p=\mu}=1, 
-// 2 current quark mass dependent scheme used by Tang Can.  S^{-1}(\mu)=i\slash{\mu}+m_{f}
-//   Z1=Z2^2 for RL vertex, Z1=Z2 for TGL vertex.
-// 3 current quark mass dependent scheme used by Qin Si-Xue. S^{-1}(\mu)=i\slash{\mu}+m_{f}
-//   Z1 is absorbed in the gluon model.
-//
+// ReScheme determines the renormalization scheme we use.
+// _RENORMALIZATION_OFF_  means we don't do renormalization at all. It equals that the renormalization point is infinity.
+// _RENORMALIZATION_CURRENT_MASS_INDEPENDENT: current quark mass independent scheme used by Chen Jing. A(\mu)=1, \frac{dB(p)}{dm_{f}}|_{p=\mu}=1, Z1=Z2^2
+// _RENORMALIZATION_CURRENT_MASS_DEPENDENT: current quark mass dependent scheme used by Qin Si-Xue. S^{-1}(\mu)=i\slash{\mu}+m_{f}. Z1 is absorbed in the gluon model.
+
 double RePoint=19.0;// Renormalization point. In the unit of GeV. 
 
-//double INIT_Z_2A=1.0,INIT_Z_2C=1.0,INIT_Z_4=1.0,INIT_Z_M;
-//double Z2_d1m=0,ZM_d1m=0;
-//double Z2_d2m=0,ZM_d2m=0;
-////no renormalization
-//
-////double INIT_Z_2A=0.814823,INIT_Z_2C=0.814823,INIT_Z_4=0.351341;
-////Chen Jing ReScheme,RePoint=2.0GeV,D=1.102736,omega=0.5, RL, QC gluon.
-//
-////double INIT_Z_2A=0.784821,INIT_Z_2C=0.784821,INIT_Z_4=0.319958;
-////Chen Jing ReScheme,RePoint=2.0GeV,D=1.37842,omega=0.4, RL, QC gluon.
-//
-//
-////求解未做重整化的DS方程时的假设的重整化常数
-//double Z_2A0=1,Z_2C0=1,Z_2M0,Z_40=1;//重整化常数,Z_2M0代表裸质量与场强重整化常数的乘积
-//double Z_2A0_cmplx=1,Z_2C0_cmplx=1,Z_2M0_cmplx=1,Z_40_cmplx=1;//重整化常数,计算复平面DS方程时使用
-//
-//double Mass=0.000;//流夸克质量
-//double Mu;//化学势
-//double Temperature;//温度
+double Z2=1.0,Z4=1.0,ZM;
+// These Z's are the renormalization constants. To be determined by the code, or to be given by hand under certain renormalization scheme.
+
+
+double Mass=0.000;// current quark mass. In the unit of GeV
+double Mu=0;//化学势
+double Temperature;//温度
 //
 //double ETA=-0.65;//CLR顶点和tau5顶点的参数
 //double ALPHA=0.4413;

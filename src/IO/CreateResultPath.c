@@ -1,3 +1,20 @@
+/***************************************************************
+ * The DSE calculations may be conducted with different truncation, 
+ * different temperature or chemical potential or different parameters.
+ * 
+ * We would like to store results from different conditions in different folder,
+ * in order for easy search.
+ * 
+ * In this file, we provide a function which automatically generate the folder
+ * in which our results will be stored. 
+ * 
+ * The corresponding path name will be stored in a global string variable, 'RESULT_PATH' (declared in '/src/constants.c').
+ * 
+ * The input IF_MKDIR determines whether to create the folder.
+ * If IF_MKDIR == _CREATE_NONEXISTING_ON_, then the correponding folder will be created;
+ * if IF_MKDIR ==_CREATE_NONEXISTING_OFF_, then the corresponding folder will not be created.
+ **************************************************************/
+
 #include"stdlib.h"
 #include"stdio.h"
 #include"unistd.h"
@@ -8,8 +25,11 @@
 #include"constants.h"
 #include"IO.h"
 
+
+
 int CREATE_RESULT_PATH(int IF_MKDIR)
 {
+/***** If the folder './result' does not exist, create it. ***/
 	int	IF_EXIST = access("./result",0);
 	if(IF_EXIST !=0)mkdir("result",S_IRWXU);
 
@@ -28,13 +48,13 @@ int CREATE_RESULT_PATH(int IF_MKDIR)
     extern int GLUON_KERNEL,GLUON_UV_TAIL;
 	char str4[50];
 	if (GLUON_KERNEL == _GLUON_KERNEL_MT_ && GLUON_UV_TAIL == _GLUON_UV_TAIL_OFF_)
-		sprintf(str4, "%s", "GAUSS");
+		sprintf(str4, "%s", "GAUSS");  // Gauss gluon model is the Maris-Tandy model without the ultra-violet tail.
 	else if (GLUON_KERNEL == _GLUON_KERNEL_MT_ && GLUON_UV_TAIL == _GLUON_UV_TAIL_NORMAL_)
-		sprintf(str4, "%s", "MT");
+		sprintf(str4, "%s", "MT");  // 'MT' is short for Maris-Tandy model
 	else if (GLUON_KERNEL == _GLUON_KERNEL_QC_ && GLUON_UV_TAIL == _GLUON_UV_TAIL_OFF_)
-		sprintf(str4, "%s", "IC");
+		sprintf(str4, "%s", "IC");  // 'IC' is short for 'infrared constant'. This model is the same as Qin-Chang model except it does not have UV tail.
 	else if (GLUON_KERNEL == _GLUON_KERNEL_QC_ && GLUON_UV_TAIL == _GLUON_UV_TAIL_NORMAL_)
-		sprintf(str4, "%s", "QC");
+		sprintf(str4, "%s", "QC"); // 'QC' is short for 'Qin-Chang' model.
 	else
 	{
 		printf("wrong gluon model! %s %i\n",__FILE__,__LINE__);
@@ -74,224 +94,117 @@ int CREATE_RESULT_PATH(int IF_MKDIR)
 		
 /***** 3rd layer of the folder:  parameters in the vertex and gluon model ****/
 
-	char str_ETA[50];
-	//sprintf(str_ETA,"ETA%06.3f",ETA);
-	//
-	//		char str_D[50];
-	//		sprintf(str_D,"D%10.4e",GLUON_GAUSS_D);
-	//
-	//		char str_DL[50];
-	//		sprintf(str_DL,"DL%10.4e",GLUON_D_LONG);
-	//
-	//		char str_DT[50];
-	//		sprintf(str_DT,"DT%10.4e",GLUON_D_TRAN);
-	//
-	//		char str_omega[50];
-	//		sprintf(str_omega,"omega%5.3f",GLUON_GAUSS_OMEGA);
-	//
-	//		char str_alpha[50];
-	//		sprintf(str_alpha,"alpha%9.3e",ALPHA);
-	//
-	//		char str_alphaT[50];
-	//		sprintf(str_alphaT,"alphaT%9.3e",ALPHA_T);
-	//
-	//		char str_mG[50];
-	//		sprintf(str_mG,"mG%9.3e",GLUON_MASS);
-	//
-	//		char str_Lambda[50];
-	//		sprintf(str_Lambda,"Lambda%10.4e",LambdaV_PV);
-	//
-	//		if(VERTEX==3 || VERTEX==4)
-	//		{
-	//			strcat(RESULT_PATH,"/");
-	//			strcat(RESULT_PATH,str_ETA);
-	//		}
-	//
-	//		if(GLUON_basic==10 || GLUON_basic==20)
-	//		{
-	//			if(GLUON_thermal==0)
-	//			{
-	//				if(VERTEX==3 ||VERTEX==4)
-	//				{
-	//					strcat(RESULT_PATH,"_");
-	//					strcat(RESULT_PATH,str_D);
-	//				}
-	//				else
-	//				{
-	//					strcat(RESULT_PATH,"/");
-	//					strcat(RESULT_PATH,str_D);
-	//				}
-	//			}
-	//
-	//			else if(GLUON_thermal==10)
-	//			{
-	//				if(VERTEX==3 || VERTEX==4) strcat(RESULT_PATH,"_");
-	//				else strcat(RESULT_PATH,"/");
-	//
-	//				strcat(RESULT_PATH,str_DL);
-	//				strcat(RESULT_PATH,"_");
-	//				strcat(RESULT_PATH,str_DT);
-	//
-	//			}
-	//
-	//			if(GLUON_basic==10 || GLUON_basic==20)
-	//			{
-	//				strcat(RESULT_PATH,"_");
-	//				strcat(RESULT_PATH,str_omega);
-	//			}
-	//
-	//			if(GLUON_medium==10 || GLUON_medium==11)
-	//			{
-	//				strcat(RESULT_PATH,"_");
-	//				strcat(RESULT_PATH,str_alpha);
-	//			}
-	//
-	//			if(GLUON_medium==20)
-	//			{
-	//				strcat(RESULT_PATH,"_");
-	//				strcat(RESULT_PATH,str_alphaT);
-	//			}
-	//
-	//			char str_PoleHandle[50];
-	//			sprintf(str_PoleHandle,"Pole%8.2e",POLE_HANDLE_PARA_S);
-	//
-	//			if(VERTEX==2 || VERTEX==3||VERTEX==4)
-	//			{
-	//				strcat(RESULT_PATH,"_");
-	//				strcat(RESULT_PATH,str_PoleHandle);
-	//
-	//			}
-	//		}
-	//
-	//		if(GLUON_basic==50)
-	//		{
-	//				if(VERTEX==3 ||VERTEX==4)
-	//				{
-	//					strcat(RESULT_PATH,"_");
-	//					strcat(RESULT_PATH,str_mG);
-	//					strcat(RESULT_PATH,"_");
-	//					strcat(RESULT_PATH,str_Lambda);
-	//				}
-	//				else
-	//				{
-	//					strcat(RESULT_PATH,"/");
-	//					strcat(RESULT_PATH,str_mG);
-	//					strcat(RESULT_PATH,"_");
-	//					strcat(RESULT_PATH,str_Lambda);
-	//				}
-	//
-	//
-	//
-	//			if(GLUON_medium==10 || GLUON_medium==11)
-	//			{
-	//				strcat(RESULT_PATH,"_");
-	//				strcat(RESULT_PATH,str_alpha);
-	//			}
-	//
-	//			if(GLUON_medium==20)
-	//			{
-	//				strcat(RESULT_PATH,"_");
-	//				strcat(RESULT_PATH,str_alphaT);
-	//			}
-	//
-	//			char str_PoleHandle[50];
-	//			sprintf(str_PoleHandle,"Pole%8.2e",POLE_HANDLE_PARA_S);
-	//
-	//			if(VERTEX==2 || VERTEX==3||VERTEX==4)
-	//			{
-	//				strcat(RESULT_PATH,"_");
-	//				strcat(RESULT_PATH,str_PoleHandle);
-	//
-	//			}
-	//		}
-	//
-	//
-	//
-	//		if(IF_MKDIR==1)
-	//		{
-	//			IF_EXIST = access(RESULT_PATH,00);
-	//			if(IF_EXIST!=0)MAKE_PATH_SUCCESS = mkdir(RESULT_PATH,S_IRWXU);
-	//			if(MAKE_PATH_SUCCESS ==0)printf("RESULT_PATH = %s\n",RESULT_PATH);
-	//		}
-	//
-	//
-	//	//路径第4层：指定重整化点与夸克流质量
-	//	char str_RENORM[200];
-	//	if(ReScheme==1) sprintf(str_RENORM,"Re1_(Z2)%6.4f_(Z4)%6.4f",INIT_Z_2A,INIT_Z_4);
-	//	else if(ReScheme==2)sprintf(str_RENORM,"Re2_RePoint%06.3f",RePoint);
-	//	else if(ReScheme==3)sprintf(str_RENORM,"Re3_RePoint%06.3f",RePoint);
-	//	else {printf("wrong ReScheme! %s %i\n",__FILE__,__LINE__);exit(0);}
-	//
-	//
-	//	char str_mass[30];
-	//	sprintf(str_mass,"Mass%10.4e",Mass);
-	//
-	//	if(GLUON_basic!=50)
-	//	{
-	//		strcat(RESULT_PATH,"/");
-	//		strcat(RESULT_PATH,str_RENORM);
-	//		strcat(RESULT_PATH,"_");
-	//		strcat(RESULT_PATH,str_mass);
-	//	}
-	//	else if(GLUON_basic==50)
-	//	{
-	//		strcat(RESULT_PATH,"/");
-	//		strcat(RESULT_PATH,str_mass);
-	//
-	//	}
-	//
-	//	if(IF_MKDIR==1)
-	//	{
-	//		IF_EXIST = access(RESULT_PATH,00);
-	//		if(IF_EXIST!=0)MAKE_PATH_SUCCESS = mkdir(RESULT_PATH,S_IRWXU);
-	//		if(MAKE_PATH_SUCCESS ==0)printf("RESULT_PATH = %s\n",RESULT_PATH);
-	//	}
-	//
-	//
-	//
-	//	//路径第5层：指定温度与化学势
-	//
-	//	if(T_MU==0)
-	//	{
-	//		Temperature=0;
-	//		Mu=0;
-	//	}
-	//	else if(T_MU ==1)
-	//	{
-	//		char str6[50];
-	//		sprintf(str6,"/T%10.5e_Mu%10.5e",Temperature,Mu);
-	//		strcat(RESULT_PATH,str6);
-	//	}
-	//	else if(T_MU==2)
-	//	{
-	//		char str6[50];
-	//		Temperature=0;
-	//		sprintf(str6,"/Mu%10.5e",Mu);
-	//		strcat(RESULT_PATH,str6);
-	//	}
-	//	else
-	//	{
-	//		printf("wrong T_MU!");
-	//		exit(0);
-	//	}
-	//
-	//	if(IF_MKDIR==1)
-	//	{
-	//		IF_EXIST = access(RESULT_PATH,00);
-	//		if(IF_EXIST!=0)MAKE_PATH_SUCCESS = mkdir(RESULT_PATH,S_IRWXU);
-	//		if(MAKE_PATH_SUCCESS ==0)printf("RESULT_PATH = %s\n",RESULT_PATH);
-	//	}
-	//
-	//	IF_EXIST = access(RESULT_PATH,00);
-	//	if(IF_EXIST !=0)
-	//	{
-	//		printf("no such folder	%s\n",RESULT_PATH);
-	//		return -1;
-	//	}
-	//	else
-	//	{
-	//		printf("RESULT_PATH=	%s\n",RESULT_PATH);
-	//		return 1;
-	//	}
+
+	extern double GLUON_D,GLUON_OMEGA;
+	char str_D[50];
+	sprintf(str_D, "D%10.4e", GLUON_D);
+
+	char str_omega[50];
+	sprintf(str_omega,"omega%5.3f",GLUON_OMEGA);
+	
+	
+	extern int GLUON_KERNEL;
+	if(GLUON_KERNEL==_GLUON_KERNEL_MT_ || GLUON_KERNEL==_GLUON_KERNEL_QC_)
+	{
+		strcat(RESULT_PATH, "/");
+		strcat(RESULT_PATH, str_D);
+
+		strcat(RESULT_PATH, "_");
+		strcat(RESULT_PATH, str_omega);
+	}
+	else{printf("wront GLUON_KERNEL! %s %i\n",__FILE__,__LINE__);exit(0);}
+
+	if (IF_MKDIR == _CREATE_NONEXISTING_ON_)
+	{
+		IF_EXIST = access(RESULT_PATH, 00);
+		if (IF_EXIST != 0)
+			MAKE_PATH_SUCCESS = mkdir(RESULT_PATH, S_IRWXU);
+		if (MAKE_PATH_SUCCESS == 0)
+			printf("RESULT_PATH = %s\n", RESULT_PATH);
+	}
+		
+		
+/***** 4th layer of the folder:  renormalization scheme, renornalization point and current quark mass****/
+
+	extern int ReScheme;
+	extern double RePoint,Z2,Z4;
+	char str_RENORM[200];
+	if(ReScheme==_RENORMALIZATION_OFF_) sprintf(str_RENORM,"Re0");
+	else if(ReScheme==_RENORMALIZATION_CURRENT_MASS_INDEPENDENT_)
+		sprintf(str_RENORM, "Re1_(Z2)%6.4f_(Z4)%6.4f",Z2,Z4);
+	else if(ReScheme==_RENORMALIZATION_CURRENT_MASS_DEPENDENT_)
+		sprintf(str_RENORM, "Re3_RePoint%06.3f", RePoint);
+	else
+	{
+		printf("wrong ReScheme! %s %i\n", __FILE__, __LINE__);
+		exit(0);
+	}
+	
+	
+	extern double Mass;
+	char str_mass[30];
+	sprintf(str_mass,"Mass%10.4e",Mass);
+
+	strcat(RESULT_PATH, "/");
+	strcat(RESULT_PATH, str_RENORM);
+	strcat(RESULT_PATH, "_");
+	strcat(RESULT_PATH, str_mass);
+
+	if (IF_MKDIR == _CREATE_NONEXISTING_ON_)
+	{
+		IF_EXIST = access(RESULT_PATH, 00);
+		if (IF_EXIST != 0)
+			MAKE_PATH_SUCCESS = mkdir(RESULT_PATH, S_IRWXU);
+		if (MAKE_PATH_SUCCESS == 0)
+			printf("RESULT_PATH = %s\n", RESULT_PATH);
+	}
+	
+	
+	
+/***** 5th layer of the folder:  temperature and chemical potential****/
+	
+	extern double Mu, Temperature;
+	if (MEDIUM == _MEDIUM_TMU_)
+	{
+			char str6[50];
+			sprintf(str6,"/T%10.5e_Mu%10.5e",Temperature,Mu);
+			strcat(RESULT_PATH,str6);
+	}
+	else if (MEDIUM == _MEDIUM_T0MU_)
+	{
+		char str6[50];
+		sprintf(str6, "/Mu%10.5e", Mu);
+		strcat(RESULT_PATH, str6);
+	}
+	else if (MEDIUM == _MEDIUM_T0MU0_);
+	else
+	{
+		printf("wrong T_MU!");
+		exit(0);
+	}
+
+	if (IF_MKDIR == _CREATE_NONEXISTING_ON_)
+	{
+		IF_EXIST = access(RESULT_PATH, 00);
+		if (IF_EXIST != 0)
+			MAKE_PATH_SUCCESS = mkdir(RESULT_PATH, S_IRWXU);
+		if (MAKE_PATH_SUCCESS == 0)
+			printf("RESULT_PATH = %s\n", RESULT_PATH);
+	}
+
+
+/***** Check if the folder has been successfully created ***************/
+	IF_EXIST = access(RESULT_PATH, 00);
+	if (IF_EXIST != 0)
+	{
+		printf("no such folder	%s\n", RESULT_PATH);
+		return -1;
+	}
+	else
+	{
+		printf("RESULT_PATH=	%s\n", RESULT_PATH);
+		return MAKE_PATH_SUCCESS;
+	}
+
 	return MAKE_PATH_SUCCESS;
 }
